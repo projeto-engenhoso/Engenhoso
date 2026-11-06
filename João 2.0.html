@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engenhoso — Estude com intenção</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+*{box-sizing:border-box}
+:root{
+ --ink:#17243b;--muted:#718097;--line:#e5ebf3;--navy:#10213b;--blue:#2463eb;
+ --blue2:#4c83f5;--pale:#eef4ff;--bg:#f4f7fb;--white:#fff;--green:#3c9976;
+ --shadow:0 12px 32px rgba(24,48,83,.055);--radius:18px
+}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif}
+button,input,textarea,select{font:inherit}
+button{transition:background .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease}
+.app-shell{min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:250px;background:var(--navy);padding:29px 19px;display:flex;flex-direction:column;z-index:5;color:#fff}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff;font:800 21px Manrope,sans-serif;letter-spacing:-.8px;margin:0 0 55px 5px}
+.brand-mark{display:grid;place-items:center;width:37px;height:37px;border-radius:12px;background:linear-gradient(145deg,#5a91ff,#2861e8);color:#fff;font:800 21px Manrope;box-shadow:0 7px 18px #2764e755}
+.side-label,.eyebrow,.top-caption{font-size:9px;font-weight:700;letter-spacing:1.55px;color:#91a4c1}
+.side-label{margin:0 0 15px 10px}
+nav{display:grid;gap:7px}
+.nav-item{border:1px solid transparent;background:transparent;padding:13px 12px;border-radius:11px;text-align:left;font:600 12px 'DM Sans';color:#aebbd0;cursor:pointer}
+.nav-item span{display:inline-block;width:27px;font-size:17px;color:#8da9d7}
+.nav-item:hover{background:#1a3152;color:#fff}
+.nav-item.active{background:#203b63;border-color:#315584;color:#fff;box-shadow:inset 3px 0 #5d91ff}
+.nav-item.active span{color:#82aaff}
+.sidebar-note{margin-top:auto;background:#192f4e;border:1px solid #294364;border-radius:15px;padding:17px;margin-bottom:22px}
+.note-icon{color:#80aaff;font-size:20px}
+.sidebar-note strong{display:block;font:700 12px Manrope;margin:9px 0 5px;color:#f2f6ff}
+.sidebar-note p{margin:0;color:#aab9d0;font-size:10px;line-height:1.65}
+.profile{border-top:1px solid #2b405d;padding:17px 3px 0;display:flex;align-items:center;gap:10px}
+.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#294a78;color:#dbe8ff;font-weight:700}
+.profile strong,.profile small{display:block}
+.profile strong{font-size:11px;color:#f1f5fc}.profile small{font-size:10px;color:#8fa2bd;margin-top:3px}
+.profile-dot,.green-dot{width:7px;height:7px;border-radius:50%;background:#65c39b;margin-left:auto}
+.main{margin-left:250px;max-width:1550px;padding:0 56px 28px}
+.topbar{height:77px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);margin-bottom:43px}
+.top-caption{color:#9aa8bb}
+.top-button{border:1px solid var(--line);border-radius:20px;background:white;padding:9px 14px;color:#687991;font-size:10px;box-shadow:0 2px 7px #10213b08}
+.top-button span{font-weight:700;margin-left:8px;color:var(--ink)}
+.mobile-brand{display:none}
+.page{display:none;animation:fade .25s ease}.page.active{display:block}
+@keyframes fade{from{opacity:.3;transform:translateY(5px)}to{opacity:1;transform:none}}
+.welcome-row{display:flex;justify-content:space-between;align-items:center;min-height:210px;margin-bottom:39px}
+.eyebrow{margin:0 0 12px;color:#7d91ad}
+h1,h2,h3,p{margin-top:0}
+h1{font:800 clamp(34px,4vw,49px)/1.12 Manrope,sans-serif;letter-spacing:-2.4px;margin-bottom:14px;color:var(--navy)}
+h1 em{font-style:normal;color:var(--blue)}
+.subhead{font-size:13px;line-height:1.75;color:var(--muted);max-width:570px;margin:0}
+.welcome-art{width:210px;height:175px;position:relative;display:grid;place-items:center;margin-right:35px}
+.orbit{position:absolute;border:1px solid #c9d9f7;border-radius:50%;transform:rotate(-28deg)}
+.orbit-one{width:185px;height:90px}.orbit-two{width:140px;height:150px;transform:rotate(40deg)}
+.art-center{width:77px;height:77px;border-radius:25px;background:linear-gradient(145deg,#3979f1,#174bc0);color:white;display:grid;place-items:center;font-size:36px;box-shadow:0 15px 30px #2463eb38}
+.art-tag{position:absolute;right:-17px;bottom:10px;background:#fff;border:1px solid var(--line);padding:8px 12px;border-radius:20px;font-size:8px;letter-spacing:1px;font-weight:700;color:var(--blue);box-shadow:var(--shadow)}
+.section-heading,.panel-head{display:flex;justify-content:space-between;align-items:center}
+.section-heading{margin-bottom:17px}.section-heading h2{font:700 20px Manrope;margin:0;color:var(--navy)}
+.soft-pill{display:inline-flex;align-items:center;gap:8px;border-radius:20px;padding:8px 12px;background:#fff;border:1px solid var(--line);font-size:9px;color:#72839a}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:18px}
+.stat-card,.panel{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:21px;box-shadow:var(--shadow)}
+.stat-card{position:relative;overflow:hidden}
+.stat-card:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:-40px;top:-48px;background:#f2f6ff}
+.stat-top{display:flex;justify-content:space-between;align-items:center;color:#7d8ba0;font-size:10px;margin-bottom:18px;position:relative;z-index:1}
+.stat-icon{width:31px;height:31px;border-radius:10px;display:grid;place-items:center;font-size:16px}
+.lilac{background:#edf2ff;color:#346ce0}.mint{background:#eaf7f1;color:#4e9a7a}.peach{background:#fff4e9;color:#d18b5a}
+.stat-card>strong{display:block;font:700 20px Manrope;letter-spacing:-.5px;min-height:27px;color:var(--navy)}
+.stat-card>strong small{font:500 11px 'DM Sans';color:#9aa6b6}
+.stat-card>small{display:block;color:#929eb0;font-size:9px;margin-top:8px}
+.progress-track{height:6px;border-radius:10px;background:#edf1f7;overflow:hidden;margin-top:13px}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#2463eb,#70a0ff);border-radius:10px;transition:width .3s}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel-head{margin-bottom:20px}.panel-head h3,.panel h3{font:700 16px Manrope;margin:0;color:var(--navy)}
+.panel-head .eyebrow{margin-bottom:7px}
+.text-button{border:0;background:none;color:var(--blue);font-weight:700;font-size:10px;cursor:pointer}
+.goal-empty{text-align:center;padding:12px 18px 6px}
+.empty-symbol{width:48px;height:48px;margin:0 auto 12px;border-radius:16px;background:#edf3ff;color:var(--blue);display:grid;place-items:center;font-size:23px}
+.goal-empty strong{font:700 12px Manrope;color:var(--navy)}
+.goal-empty p{font-size:10px;color:var(--muted);line-height:1.65;max-width:280px;margin:8px auto 15px}
+.primary-button{border:0;border-radius:9px;background:var(--blue);color:white;padding:11px 16px;font:700 10px 'DM Sans';cursor:pointer;box-shadow:0 5px 12px #2463eb20}
+.primary-button:hover{background:#174fc7;transform:translateY(-1px);box-shadow:0 8px 16px #2463eb2b}
+.task-preview{display:grid;gap:10px}
+.preview-task{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f3f7;font-size:10px;color:#52647d}
+.preview-task:last-child{border:0}
+.preview-dot{width:8px;height:8px;border-radius:50%;background:#5c8df0}
+.quote-strip{display:flex;align-items:center;gap:17px;background:linear-gradient(100deg,#eaf1ff,#f4f7ff);border:1px solid #e1eafe;border-radius:15px;margin-top:17px;padding:17px 22px;color:#264d91}
+.quote-mark{font:800 43px Georgia;color:#6390e9}
+.quote-strip strong{font:700 11px Manrope}.quote-strip p{font-size:9px;color:#7188ad;margin:5px 0 0}
+.strip-spark{margin-left:auto;font-size:27px;color:#5684e2}
+.page-intro{margin:4px 0 30px}.page-intro h1{font-size:43px}
+.planning-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:17px}
+.step-number{width:34px;height:34px;border-radius:50%;background:#edf3ff;color:var(--blue);display:grid;place-items:center;font-size:10px;font-weight:700}
+label{display:block;font-size:10px;font-weight:700;color:#5e7088;margin:15px 0 7px}
+input,textarea,select{width:100%;border:1px solid #e3e9f1;background:#fbfcfe;border-radius:9px;padding:12px 13px;font:11px 'DM Sans';color:var(--ink);outline:none}
+input:focus,textarea:focus,select:focus{border-color:#8aabf5;box-shadow:0 0 0 3px #edf3ff}
+textarea{resize:vertical;line-height:1.6}
+.panel .primary-button{margin-top:14px}
+.form-hint{font-size:9px;color:var(--green);min-height:12px;margin:9px 0 0}
+.inline-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.task-list-panel{margin-bottom:18px}
+.task-row{display:flex;align-items:center;gap:12px;padding:13px 3px;border-top:1px solid #eff2f6}
+.task-check{width:17px;height:17px;accent-color:var(--blue);flex-shrink:0}
+.task-info{flex:1}.task-info strong{display:block;font-size:11px;color:#34445c}
+.task-info small{display:block;font-size:9px;color:#929eb0;margin-top:4px}
+.task-row.done .task-info strong{text-decoration:line-through;color:#a4acb9}
+.delete-task{border:0;background:none;color:#aab5c3;cursor:pointer;font-size:17px}
+.empty-list{text-align:center;padding:25px;color:#929eb0;font-size:10px}
+.method-feature{background:linear-gradient(115deg,#10213b,#1b3a65);color:#fff;border-radius:17px;padding:27px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:19px;overflow:hidden}
+.feature-kicker{font-size:8px;letter-spacing:1.5px;color:#9bbcff;font-weight:700}
+.method-feature h2{font:700 22px Manrope;margin:12px 0 8px;color:#fff}
+.method-feature p{max-width:520px;color:#c0cde0;font-size:10px;line-height:1.75;margin:0}
+.feature-doodle{width:115px;height:115px;border:1px solid #56749e;border-radius:50%;display:grid;place-items:center;color:#9bbcff;font-size:35px;position:relative;flex-shrink:0}
+.feature-doodle span{position:absolute;right:-30px;bottom:0;background:#294b77;border-radius:8px;padding:8px 10px;font-size:8px;line-height:1.5;letter-spacing:1px;color:#fff}
+.method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.method-card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:19px;min-height:225px;display:flex;flex-direction:column;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
+.method-card:hover{transform:translateY(-3px);box-shadow:0 16px 35px #1c3a6412}
+.method-icon{width:37px;height:37px;border-radius:12px;display:grid;place-items:center;font-size:19px;margin-bottom:15px}
+.method-icon.purple{background:#edf2ff;color:#346ce0}.method-icon.green{background:#eaf7f1;color:#4e9a7a}.method-icon.orange{background:#fff3e8;color:#d18b5a}.method-icon.blue{background:#eaf3ff;color:#5989c5}.method-icon.pink{background:#fff0f5;color:#c47c9b}.method-icon.teal{background:#e9f7f7;color:#4d9997}
+.method-tag{font-size:8px;font-weight:700;letter-spacing:1.1px;color:#91a0b4}
+.method-card h3{font:700 14px Manrope;margin:7px 0;color:var(--navy)}
+.method-card p{font-size:9px;color:#77869b;line-height:1.7;margin:0 0 15px}
+.learn-button{margin-top:auto;text-align:left;border:0;border-top:1px solid #edf1f6;background:none;padding:12px 0 0;color:var(--blue);font:700 9px 'DM Sans';cursor:pointer}
+.learn-button:hover{color:#174fc7}.learn-button span{float:right}
+.method-disclaimer{font-size:9px;color:#8290a3;margin:18px 2px}
+.performance-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:17px}
+.performance-main{min-height:230px}
+.big-progress{font:800 53px Manrope;color:var(--blue);margin:20px 0 5px}
+.progress-track.large{height:9px;margin:0 0 15px}
+.reflection-history{display:grid;gap:10px}
+.reflection-item{padding:12px;border-radius:10px;background:#f7f9fd;border:1px solid #eaf0f8}
+.reflection-item small{display:block;color:#929eb0;font-size:9px;margin-bottom:6px}
+.reflection-item p{font-size:10px;line-height:1.6;margin:0;color:#52647d}
+.small-note{font-size:9px;color:#929eb0;line-height:1.6;margin:17px 2px}
+footer{border-top:1px solid var(--line);margin-top:42px;padding-top:18px;color:#9aa7b7;font-size:8px;letter-spacing:1.2px}
+footer span{color:var(--blue);padding:0 5px}
+.modal-backdrop{display:none;position:fixed;inset:0;background:#0c1a2c99;z-index:20;align-items:center;justify-content:center;padding:20px}
+.modal-backdrop.open{display:flex}
+.modal{background:white;border:1px solid #e7edf6;border-radius:18px;padding:30px;max-width:490px;width:100%;position:relative;box-shadow:0 25px 80px #0b1b3344}
+.modal h2{font:800 25px Manrope;margin:7px 0 15px;color:var(--navy)}
+.modal p,.modal li{font-size:11px;line-height:1.75;color:#718097}
+.modal ul{padding-left:20px}
+.modal-close{position:absolute;right:17px;top:13px;border:0;background:none;font-size:26px;color:#8593a7;cursor:pointer}
+.modal .primary-button{margin-top:10px}
+@media(max-width:1050px){.main{padding:0 30px;margin-left:225px}.sidebar{width:225px}.method-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){
+ .sidebar{width:100%;height:62px;inset:0 0 auto;padding:10px 17px;flex-direction:row;align-items:center;border-right:0;border-bottom:1px solid var(--line)}
+ .brand{margin:0;font-size:18px}.brand-mark{width:32px;height:32px}
+ .side-label,.sidebar nav,.sidebar-note,.profile{display:none}
+ .main{margin:62px 0 0;padding:0 18px 25px}.topbar{height:55px;margin-bottom:28px}
+ .top-caption{font-size:7px}.top-button{font-size:9px;padding:7px 10px}
+ .welcome-row{min-height:0;margin-bottom:30px}.welcome-art{width:105px;height:110px;margin-right:0}
+ .orbit-one{width:100px;height:55px}.orbit-two{width:75px;height:90px}
+ .art-center{width:49px;height:49px;border-radius:16px;font-size:25px}.art-tag{font-size:6px;right:-8px}
+ .welcome-row h1{font-size:32px}.subhead{font-size:11px}
+ .stats-grid{grid-template-columns:1fr;gap:9px}.stat-card{padding:15px}
+ .stat-top{margin-bottom:8px}.stat-card>strong{font-size:17px}
+ .content-grid,.planning-grid,.performance-grid{grid-template-columns:1fr}
+ .section-heading h2{font-size:18px}.soft-pill{font-size:8px}
+ .page-intro h1{font-size:34px}.method-feature{padding:22px}
+ .method-feature h2{font-size:19px}.feature-doodle{width:75px;height:75px;font-size:25px}
+ .method-grid{grid-template-columns:1fr}.method-card{min-height:0}
+ .inline-fields{grid-template-columns:1fr 1fr}.quote-strip{padding:13px}
+ .quote-strip strong{font-size:10px}.mobile-brand{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* ENGEnHOSO — revisão visual: minimalista, elegante, preto/grafite/roxo */
+:root {
+  --ink: #f2efff;
+  --muted: #aaa5bd;
+  --line: #373344;
+  --purple: #9a83ff;
+  --lav: #302943;
+  --bg: #17151e;
+}
+html, body { background: #17151e; color: #f2efff; }
+body { background: #17151e; }
+.sidebar {
+  background: #1e1c27;
+  border-right: 1px solid #373344;
+}
+.brand, .welcome-row h1, .page-intro h1, .section-heading h2,
+.panel-head h3, .stat-card > strong, .goal-empty strong {
+  color: #f3f0ff;
+}
+.brand-mark, .art-center {
+  background: linear-gradient(145deg, #a28cff, #6950d5);
+  box-shadow: 0 12px 28px #8a70ff30;
+}
+.nav-item { color: #aaa5bd; }
+.nav-item.active {
+  background: #302943;
+  color: #c0adff;
+  box-shadow: inset 3px 0 #9a83ff;
+}
+.topbar { border-bottom-color: #373344; }
+.welcome-row h1 em, .page-intro h1 em { color: #a58fff; }
+.welcome-row .subhead, .stat-top, .stat-card > small,
+.goal-empty p, .preview-task, .quick-card small {
+  color: #aaa5bd;
+}
+.orbit { border-color: #51446f; }
+.art-tag {
+  color: #d1c5ff;
+  background: #292535;
+  border-color: #49405f;
+  box-shadow: 0 8px 22px #08070d55;
+}
+.soft-pill {
+  background: #292535;
+  color: #c6bbeb;
+  border: 1px solid #40394f;
+}
+.stat-card, .panel, .quick-card {
+  background: #24212e;
+  border: 1px solid #393546;
+  box-shadow: 0 8px 24px #09081030;
+}
+.stat-icon, .empty-symbol, .quick-icon {
+  background: #352d4b;
+  color: #c1adff;
+}
+.quick-icon-blue {
+  background: #2d2a40;
+  color: #b5a6f4;
+}
+.progress-track { background: #403b4e; }
+.progress-fill { background: linear-gradient(90deg, #8068e8, #b19cff); }
+.goal-empty strong { color: #f1edff; }
+.primary-button {
+  background: linear-gradient(135deg, #8d74f0, #6d55d0);
+  color: #fff;
+  box-shadow: 0 7px 18px #8068e833;
+}
+.primary-button:hover { background: #765edb; }
+.text-button, .quick-card b { color: #b5a0ff; }
+.quote-strip {
+  background: #302943;
+  border: 1px solid #49405f;
+  color: #c8baff;
+}
+.quote-strip strong { color: #f0eaff; }
+.quote-strip p { color: #b5accd; }
+.strip-spark {
+  background: #24212e;
+  color: #c0adff;
+}
+.sidebar-note {
+  background: #292535;
+  border: 1px solid #40394f;
+  color: #c8c0dc;
+}
+.profile, footer { border-color: #373344; color: #aaa5bd; }
+.quick-card { color: #f0edfa; }
+.quick-card:hover {
+  border-color: #7663b5;
+  box-shadow: 0 12px 28px #09081055;
+  transform: translateY(-2px);
+}
+input, textarea, select {
+  background: #1d1b26;
+  border-color: #454052;
+  color: #f2efff;
+}
+input::placeholder, textarea::placeholder { color: #827c96; }
+.modal, .method-card, .task-card, .reflection-card {
+  background: #24212e;
+  border-color: #393546;
+  color: #f2efff;
+}
+button { transition: background .18s ease, border-color .18s ease, transform .18s ease; }
+@media (max-width: 760px) {
+  .sidebar { background: #1e1c27; }
+  .main { background: #17151e; }
+}
+
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="#" aria-label="Engenhoso início"><span class="brand-mark">e.</span><span>engenhoso</span></a>
+    <div class="side-label">ESPAÇO DE ESTUDO</div>
+    <nav>
+      <button class="nav-item active" data-page="inicio"><span>⌂</span> Visão geral</button>
+      <button class="nav-item" data-page="planejamento"><span>▦</span> Meu planejamento</button>
+      <button class="nav-item" data-page="metodos"><span>✳</span> Métodos de estudo</button>
+      <button class="nav-item" data-page="desempenho"><span>↗</span> Meu desempenho</button>
+    </nav>
+    <div class="sidebar-note">
+      <div class="note-icon">✦</div>
+      <strong>Um passo de cada vez.</strong>
+      <p>Consistência não é fazer tudo. É continuar avançando.</p>
+    </div>
+    <div class="profile"><div class="avatar">E</div><div><strong>Meu espaço</strong><small>Estudante</small></div><span class="profile-dot"></span></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar"><div class="mobile-brand"><span class="brand-mark">e.</span> engenhoso</div><span class="top-caption">SEU ESPAÇO DE DESENVOLVIMENTO</span><button class="top-button" id="todayBtn">Hoje <span id="dateText"></span></button></header>
+
+    <section class="page active" id="page-inicio">
+      <div class="welcome-row"><div><p class="eyebrow">QUINTA-FEIRA • UM NOVO COMEÇO</p><h1>Estude com intenção.<br><em>Evolua com estratégia.</em></h1><p class="subhead">Organize suas prioridades, descubra métodos e acompanhe sua evolução.</p></div><div class="welcome-art"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="art-center">✦</div><span class="art-tag">IDEIA → AÇÃO</span></div></div>
+      <div class="section-heading"><div><p class="eyebrow">SEU PAINEL</p><h2>Visão geral</h2></div><span class="soft-pill"><span class="green-dot"></span> No seu ritmo, do seu jeito</span></div>
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-top"><span>Objetivo atual</span><span class="stat-icon lilac">◎</span></div><strong id="goalStat">Defina seu objetivo</strong><small id="goalSub">Um objetivo claro ajuda a dar direção.</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Tarefas concluídas</span><span class="stat-icon mint">✓</span></div><strong id="taskStat">0 <small>/ 0</small></strong><small>Pequenas ações também contam.</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Progresso do plano</span><span class="stat-icon peach">↗</span></div><strong id="progressStat">0%</strong><div class="progress-track"><div id="progressBar" class="progress-fill"></div></div></article>
+      </div>
+      <div class="content-grid">
+        <article class="panel goal-panel"><div class="panel-head"><div><p class="eyebrow">DIREÇÃO</p><h3>Meu objetivo</h3></div><button class="text-button" data-go="planejamento">Editar →</button></div><div id="goalDisplay" class="goal-empty"><div class="empty-symbol">◎</div><strong>Qual é a sua próxima conquista?</strong><p>Escolha algo que você queira melhorar e transforme isso em um plano possível.</p><button class="primary-button" data-go="planejamento">Definir objetivo</button></div></article>
+        <article class="panel today-panel"><div class="panel-head"><div><p class="eyebrow">FOCO DE HOJE</p><h3>Próximas ações</h3></div><button class="text-button" data-go="planejamento">Ver plano →</button></div><div id="todayTasks" class="task-preview"><p class="muted">Suas tarefas aparecerão aqui quando você montar seu planejamento.</p></div></article>
+      </div>
+      <article class="quote-strip"><span class="quote-mark">“</span><div><strong>Estudar melhor começa com intenção, não com pressa.</strong><p>Escolha uma prioridade e dê o primeiro passo possível hoje.</p></div><span class="strip-spark">✳</span></article>
+    </section>
+
+    <section class="page" id="page-planejamento">
+      <div class="page-intro"><p class="eyebrow">ORGANIZAÇÃO COM PROPÓSITO</p><h1>Meu <em>planejamento.</em></h1><p class="subhead">Tire os objetivos da cabeça e coloque-os em um plano que caiba na sua rotina.</p></div>
+      <div class="planning-grid">
+        <article class="panel"><div class="panel-head"><div><p class="eyebrow">01 • DIREÇÃO</p><h3>Defina seu objetivo</h3></div><span class="step-number">01</span></div><label for="goalInput">O que você quer alcançar?</label><input id="goalInput" placeholder="Ex.: ganhar mais segurança em matemática"><label for="whyInput">Por que isso é importante para você?</label><textarea id="whyInput" rows="3" placeholder="Escreva sua motivação..."></textarea><button class="primary-button" id="saveGoal">Salvar objetivo</button><p class="form-hint" id="goalMessage" aria-live="polite"></p></article>
+        <article class="panel"><div class="panel-head"><div><p class="eyebrow">02 • AÇÃO</p><h3>Transforme em tarefas</h3></div><span class="step-number">02</span></div><label for="taskInput">Qual é o próximo passo?</label><input id="taskInput" placeholder="Ex.: revisar equações do 1º grau"><div class="inline-fields"><div><label for="subjectInput">Matéria</label><input id="subjectInput" placeholder="Matemática"></div><div><label for="dayInput">Dia</label><select id="dayInput"><option>Hoje</option><option>Amanhã</option><option>Segunda</option><option>Terça</option><option>Quarta</option><option>Quinta</option><option>Sexta</option><option>Sábado</option><option>Domingo</option></select></div></div><button class="primary-button" id="addTask">+ Adicionar tarefa</button><p class="form-hint" id="taskMessage" aria-live="polite"></p></article>
+      </div>
+      <article class="panel task-list-panel"><div class="panel-head"><div><p class="eyebrow">03 • ACOMPANHAMENTO</p><h3>Meu plano de ação</h3></div><span class="soft-pill" id="taskCount">0 tarefas</span></div><div id="taskList"><div class="empty-list">Ainda não há tarefas. Comece adicionando um pequeno passo acima.</div></div></article>
+    </section>
+
+    <section class="page" id="page-metodos">
+      <div class="page-intro"><p class="eyebrow">ESTRATÉGIAS PARA EXPERIMENTAR</p><h1>Encontre seu <em>método.</em></h1><p class="subhead">Não existe uma técnica perfeita para todo mundo. Conheça opções e descubra quais funcionam melhor para cada tarefa.</p></div>
+      <div class="method-feature"><div><span class="feature-kicker">UM BOM COMEÇO</span><h2>Estudar é mais do que reler.</h2><p>Alternar formas de praticar, recuperar informações da memória e revisar ao longo do tempo pode tornar o estudo mais ativo.</p></div><div class="feature-doodle">✳<span>IDEIA<br>EM AÇÃO</span></div></div>
+      <div class="method-grid">
+        <article class="method-card"><div class="method-icon purple">◷</div><span class="method-tag">GESTÃO DO TEMPO</span><h3>Pomodoro</h3><p>Divida o estudo em períodos de foco e pequenas pausas. Um exemplo é estudar por 25 minutos e descansar por 5.</p><button class="learn-button" data-method="pomodoro">Como experimentar <span>→</span></button></article>
+        <article class="method-card"><div class="method-icon green">↻</div><span class="method-tag">MEMORIZAÇÃO</span><h3>Revisão espaçada</h3><p>Retome um conteúdo em diferentes dias, aumentando gradualmente o intervalo entre revisões conforme sua necessidade.</p><button class="learn-button" data-method="espacada">Como experimentar <span>→</span></button></article>
+        <article class="method-card"><div class="method-icon orange">✎</div><span class="method-tag">APRENDIZAGEM ATIVA</span><h3>Prática de recuperação</h3><p>Depois de estudar, tente explicar o assunto sem consultar o material. Em seguida, confira o que faltou.</p><button class="learn-button" data-method="recuperacao">Como experimentar <span>→</span></button></article>
+        <article class="method-card"><div class="method-icon blue">⌁</div><span class="method-tag">COMPREENSÃO</span><h3>Técnica Feynman</h3><p>Explique o conceito com palavras simples, como se estivesse ensinando alguém. Volte ao material nos pontos confusos.</p><button class="learn-button" data-method="feynman">Como experimentar <span>→</span></button></article>
+        <article class="method-card"><div class="method-icon pink">▤</div><span class="method-tag">ORGANIZAÇÃO</span><h3>Mapas e esquemas</h3><p>Organize ideias e relações visualmente. Use palavras-chave e conexões, sem transformar o mapa em uma cópia do texto.</p><button class="learn-button" data-method="mapas">Como experimentar <span>→</span></button></article>
+        <article class="method-card"><div class="method-icon teal">⇄</div><span class="method-tag">PRÁTICA VARIADA</span><h3>Intercalação</h3><p>Alterne tipos de exercícios ou assuntos relacionados durante a prática, depois de construir uma base inicial.</p><button class="learn-button" data-method="intercalacao">Como experimentar <span>→</span></button></article>
+      </div>
+      <div class="method-disclaimer">Dica: experimente uma estratégia por vez e observe se ela ajuda no seu contexto. Os métodos são ferramentas, não fórmulas universais.</div>
+    </section>
+
+    <section class="page" id="page-desempenho">
+      <div class="page-intro"><p class="eyebrow">EVOLUÇÃO, NÃO COMPARAÇÃO</p><h1>Meu <em>desempenho.</em></h1><p class="subhead">Observe seu processo, reconheça avanços e identifique o que merece atenção.</p></div>
+      <div class="performance-grid"><article class="panel performance-main"><p class="eyebrow">VISÃO DO PLANEJAMENTO</p><h3>Seu progresso atual</h3><div class="big-progress" id="bigProgress">0%</div><div class="progress-track large"><div id="bigProgressBar" class="progress-fill"></div></div><p class="muted" id="performanceSummary">Adicione tarefas ao seu plano para acompanhar sua evolução.</p></article><article class="panel reflection-panel"><p class="eyebrow">PARE E REFLITA</p><h3>Como foi seu estudo?</h3><label for="reflection">O que funcionou? O que você pode ajustar?</label><textarea id="reflection" rows="5" placeholder="Ex.: consegui manter o foco quando deixei o celular longe..."></textarea><button class="primary-button" id="saveReflection">Salvar reflexão</button><p class="form-hint" id="reflectionMessage" aria-live="polite"></p></article></div>
+      <article class="panel"><div class="panel-head"><div><p class="eyebrow">SEU HISTÓRICO</p><h3>Reflexões recentes</h3></div></div><div id="reflectionHistory" class="reflection-history"><p class="muted">Suas reflexões salvas aparecerão aqui.</p></div></article>
+      <p class="small-note">O progresso exibido considera as tarefas que você cadastrou e concluiu. Ele não representa uma nota, diagnóstico ou medida completa da aprendizagem.</p>
+    </section>
+    <footer>ENGENHOSO <span>•</span> Planeje com intenção. Evolua no seu ritmo.</footer>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="methodModal" aria-hidden="true"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-close" id="closeModal" aria-label="Fechar">×</button><span class="eyebrow">GUIA PRÁTICO</span><h2 id="modalTitle"></h2><div id="modalBody"></div><button class="primary-button" id="modalDone">Entendi, vou experimentar</button></div></div>
+<script>
+const $ = (id) => document.getElementById(id);
+const storeKey = "engenhoso-v1";
+let state = {goal:"", why:"", tasks:[], reflections:[]};
+try { state = {...state, ...JSON.parse(localStorage.getItem(storeKey) || "{}")}; } catch(e) {}
+const save = () => localStorage.setItem(storeKey, JSON.stringify(state));
+const today = new Date();
+$("dateText").textContent = today.toLocaleDateString("pt-BR",{day:"2-digit",month:"short"});
+$("todayBtn").addEventListener("click",()=>{});
+function go(page){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+page));document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.page===page));window.scrollTo({top:0,behavior:"smooth"});if(page==="desempenho")renderReflections();}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.page)));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
+function render(){
+  $("goalInput").value=state.goal||""; $("whyInput").value=state.why||"";
+  $("goalStat").textContent=state.goal||"Defina seu objetivo";
+  $("goalSub").textContent=state.why||"Um objetivo claro ajuda a dar direção.";
+  $("goalDisplay").innerHTML=state.goal?`<div class="empty-symbol">◎</div><strong>${esc(state.goal)}</strong><p>${esc(state.why||"Seu objetivo está definido. Agora escolha pequenas ações para avançar.")}</p><button class="primary-button" data-go="planejamento">Organizar próximos passos</button>`:$("goalDisplay").innerHTML;
+  $("goalDisplay").querySelector("[data-go]")?.addEventListener("click",()=>go("planejamento"));
+  const done=state.tasks.filter(t=>t.done).length, total=state.tasks.length, pct=total?Math.round(done/total*100):0;
+  $("taskStat").innerHTML=`${done} <small>/ ${total}</small>`;$("progressStat").textContent=pct+"%";$("progressBar").style.width=pct+"%";
+  $("bigProgress").textContent=pct+"%";$("bigProgressBar").style.width=pct+"%";
+  $("performanceSummary").textContent=total?`${done} de ${total} tarefas concluídas. Continue ajustando seu plano conforme sua rotina.`:"Adicione tarefas ao seu plano para acompanhar sua evolução.";
+  $("taskCount").textContent=`${total} ${total===1?"tarefa":"tarefas"}`;
+  const list=$("taskList");list.innerHTML=total?state.tasks.map((t,i)=>`<div class="task-row ${t.done?"done":""}"><input class="task-check" type="checkbox" data-check="${i}" ${t.done?"checked":""} aria-label="Concluir ${esc(t.title)}"><div class="task-info"><strong>${esc(t.title)}</strong><small>${esc(t.subject||"Estudo")} • ${esc(t.day)}</small></div><button class="delete-task" data-delete="${i}" aria-label="Excluir tarefa">×</button></div>`).join():'<div class="empty-list">Ainda não há tarefas. Comece adicionando um pequeno passo acima.</div>';
+  list.querySelectorAll("[data-check]").forEach(el=>el.addEventListener("change",()=>{state.tasks[+el.dataset.check].done=el.checked;save();render()}));
+  list.querySelectorAll("[data-delete]").forEach(el=>el.addEventListener("click",()=>{state.tasks.splice(+el.dataset.delete,1);save();render()}));
+  const upcoming=state.tasks.filter(t=>!t.done).slice(0,3);$("todayTasks").innerHTML=upcoming.length?upcoming.map(t=>`<div class="preview-task"><span class="preview-dot"></span><span>${esc(t.title)} <small style="color:#a0a2b0">· ${esc(t.day)}</small></span></div>`).join():'<p class="muted">Nenhuma tarefa pendente. Você pode adicionar novas ações no planejamento.</p>';
+  renderReflections();
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+$("saveGoal").addEventListener("click",()=>{state.goal=$("goalInput").value.trim();state.why=$("whyInput").value.trim();save();$("goalMessage").textContent=state.goal?"Objetivo salvo! Você pode ajustá-lo quando precisar.":"Escreva um objetivo antes de salvar.";render();});
+$("addTask").addEventListener("click",()=>{const title=$("taskInput").value.trim();if(!title){$("taskMessage").textContent="Escreva uma tarefa para adicionar.";return;}state.tasks.push({title,subject:$("subjectInput").value.trim()||"Estudo",day:$("dayInput").value,done:false});$("taskInput").value="";$("taskMessage").textContent="Tarefa adicionada ao seu plano.";save();render();});
+$("saveReflection").addEventListener("click",()=>{const value=$("reflection").value.trim();if(!value){$("reflectionMessage").textContent="Escreva uma reflexão antes de salvar.";return;}state.reflections.unshift({text:value,date:new Date().toLocaleDateString("pt-BR")});state.reflections=state.reflections.slice(0,8);$("reflection").value="";$("reflectionMessage").textContent="Reflexão salva. Obrigado por observar seu processo!";save();renderReflections();});
+function renderReflections(){$("reflectionHistory").innerHTML=state.reflections.length?state.reflections.map(r=>`<div class="reflection-item"><small>${esc(r.date)}</small><p>${esc(r.text)}</p></div>`).join():'<p class="muted">Suas reflexões salvas aparecerão aqui.</p>';}
+const methods={
+pomodoro:["Pomodoro","1. Escolha uma tarefa específica e pequena.<br>2. Ajuste um período de foco (por exemplo, 25 minutos).<br>3. Afaste distrações e trabalhe nessa tarefa.<br>4. Faça uma pausa curta e repita se fizer sentido.<br><br><strong>Adapte:</strong> períodos menores ou maiores podem funcionar melhor dependendo da tarefa e da sua concentração."],
+espacada:["Revisão espaçada","1. Estude o conteúdo pela primeira vez.<br>2. Faça uma revisão breve no dia seguinte.<br>3. Retome alguns dias depois e novamente mais adiante.<br>4. Tente lembrar antes de consultar o material.<br><br><strong>Adapte:</strong> revise com mais frequência quando o conteúdo ainda estiver difícil."],
+recuperacao:["Prática de recuperação","1. Leia ou assista a uma explicação.<br>2. Feche o material.<br>3. Escreva ou fale tudo o que consegue lembrar.<br>4. Confira suas anotações e identifique lacunas.<br>5. Volte aos pontos que precisam de atenção."],
+feynman:["Técnica Feynman","1. Escolha um conceito.<br>2. Explique com palavras simples, como se ensinasse alguém.<br>3. Perceba onde sua explicação ficou vaga.<br>4. Consulte o material e tente explicar novamente.<br><br>O objetivo é revelar o que ainda não está claro, não produzir uma explicação perfeita de primeira."],
+mapas:["Mapas e esquemas","1. Escreva o tema central.<br>2. Separe ideias principais em ramificações.<br>3. Conecte conceitos que tenham relação.<br>4. Use palavras-chave e exemplos curtos.<br><br>Evite copiar páginas inteiras: o esquema deve ajudar a enxergar relações."],
+intercalacao:["Intercalação","1. Comece entendendo os tipos de exercício ou conceitos.<br>2. Alterne entre dois ou três tipos relacionados.<br>3. Observe qual estratégia cada questão pede.<br>4. Confira as respostas e retome os tipos mais difíceis.<br><br>É uma estratégia para variar a prática; em conteúdos totalmente novos, pode ser útil construir uma base antes."]
+};
+document.querySelectorAll("[data-method]").forEach(b=>b.addEventListener("click",()=>{const m=methods[b.dataset.method];$("modalTitle").textContent=m[0];$("modalBody").innerHTML="<p>"+m[1]+"</p>";$("methodModal").classList.add("open");$("methodModal").setAttribute("aria-hidden","false");}));
+function closeModal(){$("methodModal").classList.remove("open");$("methodModal").setAttribute("aria-hidden","true");}
+$("closeModal").addEventListener("click",closeModal);$("modalDone").addEventListener("click",closeModal);$("methodModal").addEventListener("click",e=>{if(e.target===$("methodModal"))closeModal();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+render();
+</script>
+</body>
+</html>
